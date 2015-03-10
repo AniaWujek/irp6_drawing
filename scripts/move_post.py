@@ -12,7 +12,7 @@ class move_post:
 		#ustaw sie pionowo nad kartka
 		if czas < 10.0:
 			czas = 10.0
-		self.irpos.move_to_joint_position([ 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, 0], czas)
+		self.irpos.move_to_joint_position([ 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], czas)
 	
 	def zlapKlocek(self, czas):
 		#zlap klocek
