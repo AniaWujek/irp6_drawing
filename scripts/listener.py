@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-from IRPOS import *
-from std_msgs.msg import Int32
+from irpos import *
+from std_msgs.msg import *
 
 def callback(data):
     rospy.loginfo(rospy.get_caller_id()+" I heard %s",data.data)
-    irpos.
+    
     #print "jestem tu!"
     
 def listener():
@@ -17,7 +17,7 @@ def listener():
     #print "jestem w listenerze!"
     rospy.init_node('listener', anonymous=False)
 
-    rospy.Subscriber("int", Int32, callback)
+    rospy.Subscriber("pnp", Float32MultiArray, callback)
     
     print "jestem po subsciberze"
 

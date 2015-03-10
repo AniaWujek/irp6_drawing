@@ -16,24 +16,29 @@ def createPose(x, y, z, ox, oy, oz, ow):
   	
 
 if __name__ == '__main__':
-	irpos = IRPOS("rysowanie", "Irp6ot", 7, "irp6ot_manager")
+	irpos = IRPOS("rysowanie", "Irp6p", 6)
 
-	move = move_track(irpos)
+	#move = move_track(irpos)
 	
-	irpos.move_rel_to_cartesian_pose(10.0, Pose(Point(0.05, 0.0, -0.1), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	
 	
 	#irpos.move_rel_to_cartesian_pose(8.0, Pose(Point(0.05, -0.05, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
 	
-	#irpos.move_to_joint_position([ 0, 0, -0.5 * math.pi, 0, 0.5 * math.pi, 0.5 * math.pi, -0.5 * math.pi], 10)
+	irpos.move_to_joint_position([0, -0.5 * math.pi, 0, 0, 1.0 * math.pi, -0.5 * math.pi], 10)
 	
 	#move.pozycjaRobocza(10.0)
+	
+	#irpos.move_to_cartesian_pose(20.0, Pose(Point(0.87153695, -0.09690451, 1.25501579101), Quaternion(-6.51190212919e-05, 0.99999999571, -6.54986160568e-05, 7.03445072746e-06)))
+	
+	#irpos.move_rel_to_cartesian_pose(15.0, Pose(Point(0.1, 0.0, -0.1), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	
 	#irpos.move_to_joint_position([0, 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], 20.0)
 	#print irpos.get_cartesian_pose()
 	#irpos.move_rel_to_cartesian_pose(5.0, Pose(Point(0.03, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
 	#print irpos.get_cartesian_pose()
 	
 	#move.zlapKlocek(5.0)
-	#move.zjedzDoKartki(10.0)
+	#move.zjedzDoKartki(20.0)
 	#move.jedzPoKartceStart(5.0, 0.0, 0.01)
 	#move.jedzPoKartce(5.0, 0.01, 0.0)
 	#move.jedzPoKartce(5.0, 0.0, -0.01)
