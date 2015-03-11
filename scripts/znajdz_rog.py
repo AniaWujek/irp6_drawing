@@ -39,7 +39,7 @@ def calculatePosition():
 	TBG = quaternion_matrix(quaternion)
 	TBG = TBG + numpy.matrix([[0,0,0,pX],[0,0,0,pY],[0,0,0,pZ],[0,0,0,0]])
 	
-	TCK = 
+	#TCK = 
 	
 	
 	#get quaternion and position
@@ -60,10 +60,10 @@ if __name__ == '__main__':
 	
 	pozycjaRobocza()
 	
-	for i in range(1, 4):
-		calculatePosition()
+	#for i in range(1, 4):
+	#	calculatePosition()
 	#	print lastData
-		rospy.sleep(3)
+	#	rospy.sleep(3)
 	
 	
 	
