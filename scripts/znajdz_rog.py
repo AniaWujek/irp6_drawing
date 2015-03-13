@@ -20,8 +20,8 @@ def callback(data):
     dataLock.release()
     
 def pozycjaRobocza():
-	move.pozycjaRobocza(15.0)
-	irpos.move_rel_to_cartesian_pose(10.0, Pose(Point(0.1, 0.0, -0.1), Quaternion(0.0, 0.0, 0.0, 1.0)))	
+	#move.pozycjaRobocza(10.0)
+	irpos.move_rel_to_cartesian_pose(10.0, Pose(Point(0.0, 0.0, -0.05), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 	
 def calculatePosition():
 	cartPosition = irpos.get_cartesian_pose()
