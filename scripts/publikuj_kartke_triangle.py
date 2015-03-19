@@ -18,6 +18,10 @@ move = None
 lastData = None
 matrix = numpy.zeros(shape=(4,4))
 matrix[3,3] = 1.0
+colorA = 1.0
+colorR = 0.0
+colorG = 1.0
+colorB = 0.0
 
 
 
@@ -35,16 +39,16 @@ publisher = rospy.Publisher(topic, Marker)
 def callback(data):
 	global lastData
 	global matrix
+	global colorA
+	global colorG
 	dataLock.acquire()
 	lastData = data.data
+	colorA = 1.0
+	colorG = 1.0
 	for j in range(0,3):
 		for k in range(0,4):
 			matrix[j,k] = lastData[j*4+k]
 	dataLock.release()
-    
-#def calculatePoint():
-	
-
 
 if __name__ == '__main__':
 
@@ -53,13 +57,15 @@ if __name__ == '__main__':
 	irpos = IRPOS("publikowanie_rogu", "Irp6ot", 7, "irp6ot_manager")
 	
 	global move
+	global colorA
+	global colorG
 	move = move_track(irpos)
 	
 	
-	
+	firstRound = True
 		
 	
-	
+	licznik = 0
 	
 	
 	
@@ -106,8 +112,23 @@ if __name__ == '__main__':
 		marker.scale.x = 1.0
 		marker.scale.y = 1.0
 		marker.scale.z = 1.0
-		marker.color.g = 1.0
-		marker.color.a = 1.0
+		
+		if firstRound:
+			marker.color.g = 1.0
+			marker.color.a = 1.0
+			firstRound = False
+			
+		
+		
+		marker.color.g = colorG
+		marker.color.a = colorA
+		
+		if colorG > 0.0:
+			colorG = colorG - 0.01
+		if colorG < 0.7:
+			colorG = 0.0
+			
+			
 		
 		
 		
@@ -122,9 +143,11 @@ if __name__ == '__main__':
 		
 		publisher.publish(marker)
 		
+
 		
 		
-		rospy.sleep(0.01)
+		
+		rospy.sleep(0.1)
 		
 	
 	
