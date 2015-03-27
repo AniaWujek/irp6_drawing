@@ -55,14 +55,16 @@ if __name__ == '__main__':
 	#rospy.init_node('znajdz_rog')
 	rospy.Subscriber("pnp", Float32MultiArray, callback)
 	irpos = IRPOS("znajdowanie_rogu", "Irp6ot", 7, "irp6ot_manager")
-	irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
-	move = move_track(irpos)
+
+	#irpos = IRPOS("znajdowanie_rogu", "Irp6ot", 7)
+	#irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	#move = move_track(irpos)
 	
 	
 	#irpos.move_rel_to_cartesian_pose(7.0, Pose(Point(0.0, 0.0, -0.05), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 	
 	
-	pozycjaRobocza()
+	#pozycjaRobocza()
 	
 	#for i in range(1, 4):
 	#	calculatePosition()
@@ -73,8 +75,8 @@ if __name__ == '__main__':
 	
 	
 	
-	#print irpos.get_joint_position()
-	#print irpos.get_cartesian_pose()
+	print irpos.get_joint_position()
+	print irpos.get_cartesian_pose()
 	
 	
 
