@@ -12,7 +12,8 @@ from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
 
 
-dataLock = threading.Lock()
+pnpLock = threading.Lock()
+pointsLock = threading.Lock()
 
 move = None
 lastData = None
@@ -37,24 +38,32 @@ publisher = rospy.Publisher(topic, Marker)
 
 
 
-def callback(data):
+def callbackPnp(data):
 	global lastData
 	global matrix
 	global colorA
 	global colorG
-	dataLock.acquire()
+	pnpLock.acquire()
 	lastData = data.data
 	colorA = 1.0
 	colorG = 1.0
 	for j in range(0,3):
 		for k in range(0,4):
 			matrix[j,k] = lastData[j*4+k]
-	dataLock.release()
+	pnpLock.release()
+	
+def callbackPoints(data)
+	pointsLock.aquire()
+	
+	pointsLock.release()
+	
+	
 
 if __name__ == '__main__':
 
 	
-	rospy.Subscriber("pnp", Float32MultiArray, callback)
+	rospy.Subscriber("pnp", Float32MultiArray, callbackPnp)
+	rospy.Subscriber("points", Float32MultiArray, callbackPoints)
 	irpos = IRPOS("publikowanie_rogu", "Irp6ot", 7, "irp6ot_manager")
 	
 	global move
