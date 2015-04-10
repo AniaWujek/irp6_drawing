@@ -18,7 +18,7 @@ class move_track:
 		#zlap klocek
 		if czas < 5.0:
 			czas = 5.0
-		self.irpos.tfg_to_joint_position(0.068, czas)
+		self.irpos.tfg_to_joint_position(0.067, czas)
 	
 	def zjedzDoKartki(self, czas):
 		#zjedz do kartki

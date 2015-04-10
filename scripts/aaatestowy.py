@@ -21,7 +21,7 @@ def callback(data):
     
 def pozycjaRobocza():
 	move.pozycjaRobocza(10.0)
-	irpos.move_rel_to_cartesian_pose(15.0, Pose(Point(0.1, 0.0, -0.15), Quaternion(0.0, 0.0, 0.0, 1.0)))	
+	irpos.move_rel_to_cartesian_pose(10.0, Pose(Point(0.1, 0.0, -0.15), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 	
 def calculatePosition():
 	cartPosition = irpos.get_cartesian_pose()
@@ -52,6 +52,17 @@ if __name__ == '__main__':
 
 	global move
 	
+	if len(sys.argv) > 1 :
+		arg = sys.argv[1]
+		if sys.argv[1] == 'help' :
+			print "synchro"
+			print "robocza"
+			print "chwytak"
+			print "dol"
+			print "gora"
+			print "position"
+			sys.exit()
+	
 	#rospy.init_node('znajdz_rog')
 	rospy.Subscriber("pnp", Float32MultiArray, callback)
 	irpos = IRPOS("znajdowanie_rogu", "Irp6ot", 7, "irp6ot_manager")
@@ -63,24 +74,46 @@ if __name__ == '__main__':
 	
 	#irpos.move_rel_to_cartesian_pose(7.0, Pose(Point(0.0, 0.0, -0.05), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 	
+	#irpos.move_to_synchro_position(15.0)	
+	#pozycjaRobocza()
+	#irpos.tfg_to_joint_position(0.08, 10.0)
+	#move.zlapKlocek(10.0)
 	
-	pozycjaRobocza()
-	
+	#move.zjedzDoKartki(15.0)
+	#irpos.move_rel_to_cartesian_pose_with_contact(10.0, Pose(Point(0.0, 0.0, 0.10), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,6.0),Vector3(0.0,0.0,0.0)))
+	#irpos.move_rel_to_cartesian_pose(15.0, Pose(Point(0.0, 0.3, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	#move.podnies(5.0)
 	#for i in range(1, 4):
 	#	calculatePosition()
 	#	print lastData
 	#	rospy.sleep(3)
 	
+	#irpos.move_rel_to_cartesian_pose(5.0, Pose(Point(0.0, 0.0, -0.05), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	
+	if len(sys.argv) > 1 :
+		arg = sys.argv[1]
+		if sys.argv[1] == 'synchro' :
+			irpos.move_to_synchro_position(15.0)
+		if sys.argv[1] == 'robocza' :
+			pozycjaRobocza()
+		if sys.argv[1] == 'chwytak' :
+			irpos.tfg_to_joint_position(0.08, 10.0)
+			move.zlapKlocek(10.0)
+		if sys.argv[1] == 'dol' :
+			move.zjedzDoKartki(15.0)
+		if sys.argv[1] == 'gora' :
+			move.podnies(5.0)
+		if sys.argv[1] == 'position' :
+			print irpos.get_cartesian_pose()
 	
 	
 	
-	
-	print irpos.get_joint_position()
-	print irpos.get_cartesian_pose()
+	#print irpos.get_joint_position()
+	#print irpos.get_cartesian_pose()
 	
 	
 
-	print "OK"
+	#print "OK"
 	
 	
 	
