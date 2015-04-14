@@ -100,11 +100,27 @@ if __name__ == '__main__':
 			irpos.tfg_to_joint_position(0.08, 10.0)
 			move.zlapKlocek(10.0)
 		if sys.argv[1] == 'dol' :
-			move.zjedzDoKartki(15.0)
+			move.zjedzDoKartki(20.0)
 		if sys.argv[1] == 'gora' :
 			move.podnies(5.0)
 		if sys.argv[1] == 'position' :
+			irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
 			print irpos.get_cartesian_pose()
+			
+		if sys.argv[1] == 'test' :
+			irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+			#irpos.move_to_cartesian_pose(30.0, Pose(Point(0.73, 0.0, 1.27), irpos.get_cartesian_pose().orientation))
+			irpos.move_rel_to_cartesian_pose_with_contact(10.0, Pose(Point(0.0, 0.0, 0.10), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,6.0),Vector3(0.0,0.0,0.0)))
+			print irpos.get_cartesian_pose()
+			
+		if sys.argv[1] == 'przod' :
+			irpos.move_rel_to_cartesian_pose(10.0, Pose(Point(-0.1, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+		
+
+
+		
+			
+			
 	
 	
 	

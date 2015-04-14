@@ -62,6 +62,8 @@ if __name__ == '__main__':
 
 
 	world_points = []
+	
+	irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
 
 	while not rospy.is_shutdown():
 
@@ -77,39 +79,54 @@ if __name__ == '__main__':
 		pZ = cartPosition.position.z
 
 		quaternion = [qX, qY, qZ, qW]
+		
+		current_points = points
+		current_matrix = matrix
 
+		
 
+		if current_points:
+			
+			for contour in current_points:
 
-		if points:
-			for contour in points:
-				for i in range(0,len(contour)-2,2):
+				for i in range(0,len(contour)-1,2):
+					
 
+					
                     #punkt w ukladzie kartki
 					point = numpy.matrix([[contour[i]],[contour[i+1]],[0],[1]])
-					#point[0] = contour[i]
-					#point[1] = contour[i+1]
+					if (0 <= point[0] <= 0.21) and (0 <= point[1] <= 0.297):					
 					
-					#point[2] = 0
-					#point[3] = 1
-					
+						
+						
 
-					#punkt w ukladzie optical frame
-					point = matrix * point
+						#punkt w ukladzie optical frame
+						point = current_matrix * point
 
-					to_camera = numpy.matrix([[-1,0,0,0],[0,-1,0,0],[0,0,1,0],[0,0,0,1]])
+						#punkt w ukladzie kamery
+						optical_to_camera = numpy.matrix([[-1,0,0,0],[0,-1,0,0],[0,0,1,0],[0,0,0,1]])
+						point = optical_to_camera * point
 
-					#punkty w ukladzie kamery (tylko obrot)
-					point = to_camera * point
+						#punkt w ukladzie ostatniego stawu
+						camera_to_tl6 = numpy.matrix([[0.0551],[0],[0.27],[0]])
+						point = point + camera_to_tl6					
+						
+						#wez pod uwage narzedzie
+						poprawka = numpy.matrix([[0],[0],[-0.4],[0]])
+						point = point + poprawka
 
+						#punkt w ukladzie swiata
+						TBG = quaternion_matrix(quaternion)						
+						point = TBG * point + numpy.matrix([[pX],[pY],[pZ],[0]])
+						
+						
+						
+						print "%.5f" % point[0]
+						print "%.5f" % point[1]
+						print "%.5f" % point[2]
+						print "%.5f" % point[3]
+						print"******"
 
-
-					TBG = quaternion_matrix(quaternion)
-					TBG = TBG + numpy.matrix([[0,0,0,pX],[0,0,0,pY],[0,0,0,pZ],[0,0,0,0]])
-
-					#punkt w ukladzie swiata
-					point = TBG * point
-					
-					print point
 
 
 		rospy.sleep(1.0)
