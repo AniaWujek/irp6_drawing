@@ -40,6 +40,7 @@ if __name__ == '__main__':
 	rospy.Subscriber("pnp", Float32MultiArray, callbackPnp)
 
 	irpos = IRPOS("wyswietl_punkty", "Irp6ot", 7, "irp6ot_manager")
+	
 
 
 	world_points = []
@@ -68,32 +69,39 @@ if __name__ == '__main__':
 	while not rospy.is_shutdown():
 		
 		#punkt w ukladzie kartki
-		point = numpy.matrix([[0.0],[0.21],[0],[1]])						
+		point = numpy.matrix([[0.297],[0.0],[0.0],[1]])	
+							
 
 		#punkt w ukladzie optical frame
-		point = current_matrix * point
+		#point = current_matrix * point
 
 		#punkt w ukladzie kamery
-		optical_to_camera = numpy.matrix([[0,-1,0,0],[1,0,0,0],[0,0,1,0],[0,0,0,1]])
-		point = optical_to_camera * point
+		optical_to_camera = numpy.matrix([[-1,0,0,0],[0,-1,0,0],[0,0,1,0],[0,0,0,1]])
+		#point = optical_to_camera * point
 
-		#punkt w ukladzie ostatniego stawu
-		camera_to_tl6 = numpy.matrix([[0.0551],[0],[0.27],[0]])
-		point = point + camera_to_tl6					
+		#punkt w ukladzie narzedzia (40cm ponizej tl6: 40cm - 13cm = 27cm)
+		camera_to_tl6 = numpy.matrix([[0,-1,0,-0.0551],[1,0,0,0],[0,0,1,0.13],[0,0,0,1]])
+		#camera_to_tl6 = inverse_matrix(camera_to_tl6)
+		#point = camera_to_tl6*point
+		#
 						
-		#wez pod uwage narzedzie
-		poprawka = numpy.matrix([[0],[0],[-0.4],[0]])
-		point = point + poprawka
 
 		#punkt w ukladzie swiata
-		TBG = quaternion_matrix(quaternion)	
-		TBG = inverse_matrix(TBG)					
-		point = TBG * point + numpy.matrix([[pX],[pY],[pZ],[0]])
+		TBG = quaternion_matrix(quaternion)
+		TBG = TBG + numpy.matrix([[0,0,0,pX],[0,0,0,pY],[0,0,0,pZ],[0,0,0,0]])
+
+		
+		#point = TBG * camera_to_tl6 * optical_to_camera * current_matrix * point
+		#point = TBG * camera_to_tl6 * optical_to_camera * current_matrix * point
+		
+		point = numpy.matrix([[0.21],[0.0],[0.0],[1]])	
+		
+		point = TBG * camera_to_tl6  * optical_to_camera * current_matrix * point
 						
 						
 						
 		print "%.5f" % point[0]
-		print "%.5f" % point[1]
+		print "%.10f" % point[1]
 		print "%.5f" % point[2]
 		print "%.5f" % point[3]
 		print"******"

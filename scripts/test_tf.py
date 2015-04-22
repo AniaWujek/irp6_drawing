@@ -29,8 +29,11 @@ array.append(myArray1)
 array.append(myArray2)
 array.append(myArray3)
 
+arr = numpy.matrix([[0,-1,0,0.0551],[1,0,0,0],[0,0,1,0.27],[0,0,0,1]])
 
+print arr
 
-for d in array:
-	print d
+arr[2,3] = 100
+
+print arr
 

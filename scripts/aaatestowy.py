@@ -21,7 +21,7 @@ def callback(data):
     
 def pozycjaRobocza():
 	move.pozycjaRobocza(10.0)
-	irpos.move_rel_to_cartesian_pose(10.0, Pose(Point(0.1, 0.0, -0.15), Quaternion(0.0, 0.0, 0.0, 1.0)))	
+	irpos.move_rel_to_cartesian_pose(7.0, Pose(Point(0.1, 0.0, -0.15), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 	
 def calculatePosition():
 	cartPosition = irpos.get_cartesian_pose()
@@ -108,9 +108,9 @@ if __name__ == '__main__':
 			print irpos.get_cartesian_pose()
 			
 		if sys.argv[1] == 'test' :
-			irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
-			#irpos.move_to_cartesian_pose(30.0, Pose(Point(0.73, 0.0, 1.27), irpos.get_cartesian_pose().orientation))
-			irpos.move_rel_to_cartesian_pose_with_contact(10.0, Pose(Point(0.0, 0.0, 0.10), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,6.0),Vector3(0.0,0.0,0.0)))
+			#irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+			irpos.move_to_cartesian_pose(15.0, Pose(Point(0.67219, 0.0757406422, irpos.get_cartesian_pose().position.z), irpos.get_cartesian_pose().orientation))
+			#irpos.move_rel_to_cartesian_pose_with_contact(10.0, Pose(Point(0.0, 0.0, 0.10), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,6.0),Vector3(0.0,0.0,0.0)))
 			print irpos.get_cartesian_pose()
 			
 		if sys.argv[1] == 'przod' :
