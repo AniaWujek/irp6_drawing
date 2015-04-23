@@ -15,13 +15,17 @@ from visualization_msgs.msg import MarkerArray
 dataLock = threading.Lock()
 
 
-
+licznik = 0;
+sily = [0,0,0,0,0,0,0,0,0,0]
 
 
 def callback(data):
-	
-	dataLock.acquire()
-	print data.wrench.force.z
+
+	global licznik
+	global sily
+	dataLock.acquire()	
+	sily[licznik] = data.wrench.force.z
+	licznik = (licznik + 1) % 10	
 	dataLock.release()
 
 if __name__ == '__main__':
@@ -29,9 +33,14 @@ if __name__ == '__main__':
 	
 	rospy.Subscriber("irp6ot_arm/wrist_wrench", WrenchStamped, callback)
 	irpos = IRPOS("wyswietl_sile", "Irp6ot", 7, "irp6ot_manager")
+	irpos.conmanSwitch([irpos.robot_name+'mForceTransformation'], [], True)
 	
 	while not rospy.is_shutdown():
-		print "ok"
+		
+		print sum(sily) / len(sily)
+		
 		rospy.sleep(1.0)
+		
+	irpos.conmanSwitch([], [irpos.robot_name+'mForceTransformation'], True)
 	
 	

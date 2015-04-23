@@ -109,12 +109,26 @@ if __name__ == '__main__':
 			
 		if sys.argv[1] == 'test' :
 			#irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
-			irpos.move_to_cartesian_pose(15.0, Pose(Point(0.67219, 0.0757406422, irpos.get_cartesian_pose().position.z), irpos.get_cartesian_pose().orientation))
+			move.opusc(7.0)
+			irpos.move_to_cartesian_pose(15.0, Pose(Point(0.95655, -0.1303105242, irpos.get_cartesian_pose().position.z), irpos.get_cartesian_pose().orientation))
 			#irpos.move_rel_to_cartesian_pose_with_contact(10.0, Pose(Point(0.0, 0.0, 0.10), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,6.0),Vector3(0.0,0.0,0.0)))
 			print irpos.get_cartesian_pose()
 			
 		if sys.argv[1] == 'przod' :
 			irpos.move_rel_to_cartesian_pose(10.0, Pose(Point(-0.1, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+		
+		if sys.argv[1] == 'doldol' :
+			irpos.move_rel_to_cartesian_pose(5.0, Pose(Point(0.0, 0.0, 0.05), Quaternion(0.0, 0.0, 0.0, 1.0)))
+			irpos.move_rel_to_cartesian_pose(5.0, Pose(Point(0.0, 0.0, 0.05), Quaternion(0.0, 0.0, 0.0, 1.0)))
+		
+		if sys.argv[1] == 'along' :
+			point0 = CartesianTrajectoryPoint(rospy.Duration(3.0), Pose(Point(0.760011624185, -1.70946502728e-06, 1.50), irpos.get_cartesian_pose().orientation), Twist())
+			point1 = CartesianTrajectoryPoint(rospy.Duration(6.0), Pose(Point(0.760011624185, -1.70946502728e-06, 1.45), irpos.get_cartesian_pose().orientation), Twist())
+			points = []
+			points.append(point0)
+			points.append(point1)
+			irpos.move_along_cartesian_trajectory(points)
+			print points
 		
 
 

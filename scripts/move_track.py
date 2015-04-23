@@ -55,6 +55,11 @@ class move_track:
 			czas = 5.0
 		self.irpos.move_rel_to_cartesian_pose(czas, Pose(Point(0.0, 0.0, -0.05), Quaternion(0.0, 0.0, 0.0, 1.0)))
 		
+	def opusc(self, czas):
+		if czas < 7.0:
+			czas = 7.0
+		self.irpos.move_rel_to_cartesian_pose(czas, Pose(Point(0.0, 0.0, 0.1), Quaternion(0.0, 0.0, 0.0, 1.0)))
+		
 	
 			
 	def ustalPredkosc(self, ppunkt):

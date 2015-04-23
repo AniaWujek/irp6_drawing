@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
 	world_points = []
 	
-	irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.4), Quaternion(0.0, 0.0, 0.0, 1.0)))
 
 	
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 	while not rospy.is_shutdown():
 		
 		#punkt w ukladzie kartki
-		point = numpy.matrix([[0.297],[0.0],[0.0],[1]])	
+		point = numpy.matrix([[0.0],[0.0],[0.0],[1]])	
 							
 
 		#punkt w ukladzie optical frame
@@ -93,11 +93,10 @@ if __name__ == '__main__':
 		
 		#point = TBG * camera_to_tl6 * optical_to_camera * current_matrix * point
 		#point = TBG * camera_to_tl6 * optical_to_camera * current_matrix * point
-		
-		point = numpy.matrix([[0.21],[0.0],[0.0],[1]])	
-		
+			
+		current_matrix[1,3] = current_matrix[1,3]+0.01	
 		point = TBG * camera_to_tl6  * optical_to_camera * current_matrix * point
-						
+
 						
 						
 		print "%.5f" % point[0]
@@ -105,6 +104,10 @@ if __name__ == '__main__':
 		print "%.5f" % point[2]
 		print "%.5f" % point[3]
 		print"******"
+		
+		
+		
+
 
 
 
