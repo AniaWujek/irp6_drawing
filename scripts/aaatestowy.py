@@ -65,9 +65,9 @@ if __name__ == '__main__':
 	
 	#rospy.init_node('znajdz_rog')
 	rospy.Subscriber("pnp", Float32MultiArray, callback)
-	irpos = IRPOS("znajdowanie_rogu", "Irp6ot", 7, "irp6ot_manager")
+	#irpos = IRPOS("znajdowanie_rogu", "Irp6ot", 7, "irp6ot_manager")
 
-	#irpos = IRPOS("znajdowanie_rogu", "Irp6ot", 7)
+	irpos = IRPOS("znajdowanie_rogu", "Irp6ot", 7)
 	#irpos.set_tool_geometry_params( Pose(Point(0.0, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
 	move = move_track(irpos)
 	
