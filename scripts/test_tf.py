@@ -37,3 +37,6 @@ arr[2,3] = 100
 
 print arr
 
+variable = raw_input('nacisnij cokolwiek!')
+print 'ok'
+
