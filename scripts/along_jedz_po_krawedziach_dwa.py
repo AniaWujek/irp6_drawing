@@ -21,6 +21,7 @@ lastData = None
 licznik = 0
 
 matrix = numpy.zeros(shape=(4,4))
+
 matrix[3,3] = 1.0
 
 
@@ -45,13 +46,16 @@ def callbackPoints(data):
 	if data.data:
 		contours_number = int(data.data[0])
 		points = []
-		for i in range(1,contours_number):
+		for i in range(0,contours_number):
 			arraySize = int(data.data[ind])
 
 			start = ind+1
 			end = ind + arraySize*2 + 1
 			points.append(data.data[start:end])
 			ind = ind + arraySize*2 + 1
+
+	#~ print contours_number, len(points)
+
 
 	dataLockPoints.release()
 
@@ -99,9 +103,51 @@ if __name__ == '__main__':
 	pZ = cartPosition.position.z
 
 	quaternion = [qX, qY, qZ, qW]
-
-	current_matrix = matrix
+	
+	dataLockPoints.acquire()
 	current_points = points
+	dataLockPoints.release()
+	
+	suma = 0
+	
+	print 'zbieranie danych ..'
+	
+	for i in range(0,10):		
+		dataLockPoints.acquire()
+		current_points = points
+		suma = suma + len(points)
+		dataLockPoints.release()
+		rospy.sleep(0.5)
+		
+	print 'dane zebrane!'
+		
+	avg = suma / 10
+	
+	dataLockPoints.acquire()
+	current_points = points
+	dataLockPoints.release()
+	
+	dataLockPnp.acquire()
+	current_matrix = matrix
+	dataLockPnp.release()
+	
+	print 'czekamy na dobre kontury :)'
+	
+	while len(current_points) > avg:
+		dataLockPnp.acquire()
+		current_matrix = matrix
+		dataLockPnp.release()
+		
+		dataLockPoints.acquire()
+		current_points = points
+		dataLockPoints.release()
+		
+		print suma, len(current_points)
+		
+	
+	
+		
+		
 	
 	#punkt w ukladzie kamery
 	optical_to_camera = numpy.matrix([[-1,0,0,0],[0,-1,0,0],[0,0,1,0],[0,0,0,1]])		
@@ -125,9 +171,23 @@ if __name__ == '__main__':
 	
 	transformation = TBG * camera_to_tl6  * optical_to_camera * current_matrix
 	
+	
+	
+	#~ while not rospy.is_shutdown():
+		#~ rospy.sleep(1.0)
+		
+	# NARYSUJ OBRYS KARTKI - pierwszy kontur
+	p0 = numpy.matrix([[0.0],[0.0],[0.0],[1]])	
+	p1 = numpy.matrix([[0.21],[0.0],[0.0],[1]])
+	p2 = numpy.matrix([[0.21],[0.297],[0.0],[1]])
+	p3 = numpy.matrix([[0.0],[0.297],[0.0],[1]])
+	
 	goodPoints = []
 	
+	obrys = [0.0, 0.0, 0.21, 0.0, 0.21, 0.297, 0.0, 0.297]
 
+	#current_points.append(obrys)
+	
 	
 	if current_points:
 			
@@ -140,7 +200,7 @@ if __name__ == '__main__':
 				 #punkt w ukladzie robota	
 				point = transformation * point			
 						
-				point[2] = point[2] + 0.40				
+				point[2] = point[2] + 0.37				
 									
 				if not checkPoint(point):
 					print "point error!"
@@ -156,6 +216,17 @@ if __name__ == '__main__':
 		nextContour = False
 		first = True
 		
+		orientacja = irpos.get_cartesian_pose().orientation
+		
+		
+		
+
+			
+		
+		 
+		
+		
+		
 				
 		for contour in goodPoints:
 			point = contour[0]
@@ -170,16 +241,18 @@ if __name__ == '__main__':
 			
 			if nextContour:
 				print "podnosi"
-				move.podnies(5.0)		
+				irpos.move_rel_to_cartesian_pose(3.0, Pose(Point(0.0, 0.0, -0.03), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 				print "podniesione"
-				nextContour = True	
+			else:
+				nextContour = True
 					
 			print "pierwszy punkt w konturze - jedzie"		
-			irpos.move_to_cartesian_pose(5.0, Pose(Point(point[0], point[1], point[2]), irpos.get_cartesian_pose().orientation))
+			irpos.move_to_cartesian_pose(5.0, Pose(Point(point[0], point[1], point[2]), orientacja))
 			print "pierwszy punkt w konturze - dojechal"
 			
 			print "zjedz do kartki"
-			move.zjedzDoKartki(20.0)
+			irpos.move_rel_to_cartesian_pose_with_contact(5.0, Pose(Point(0.0, 0.0, 0.1), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,5.0),Vector3(0.0,0.0,0.0)))
+			irpos.move_rel_to_cartesian_pose(0.3, Pose(Point(0.0, 0.0, -0.003), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 			print "zjechal"
 			z = irpos.get_cartesian_pose().position.z
 			oldPoint = point
@@ -188,9 +261,9 @@ if __name__ == '__main__':
 			
 			for p in contour[1:]:
 				diff = math.sqrt(abs(pow(p[0] - oldPoint[0], 2) + pow(p[1] - oldPoint[1], 2)))
-				czas = czas + diff / 0.02
+				czas = czas + diff / 0.03
 				odleglosc = odleglosc + diff
-				pointCartTraj = CartesianTrajectoryPoint(rospy.Duration(czas), Pose(Point(p[0], p[1], z), irpos.get_cartesian_pose().orientation), Twist())	
+				pointCartTraj = CartesianTrajectoryPoint(rospy.Duration(czas), Pose(Point(p[0], p[1], z), orientacja), Twist())	
 				pointsVector.append(pointCartTraj)
 				oldPoint = p
 				
@@ -203,6 +276,8 @@ if __name__ == '__main__':
 			print "czas: ", czas
 			
 			irpos.conmanSwitch([], [irpos.robot_name+'mForceTransformation'], True)
+			
+			
 			
 		
 		move.podnies(5.0)

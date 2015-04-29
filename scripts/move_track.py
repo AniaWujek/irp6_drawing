@@ -24,7 +24,7 @@ class move_track:
 		#zjedz do kartki
 		if czas < 15.0:
 			czas = 15.0
-		self.irpos.move_rel_to_cartesian_pose_with_contact(czas, Pose(Point(0.0, 0.0, 0.3), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,3.0),Vector3(0.0,0.0,0.0)))
+		self.irpos.move_rel_to_cartesian_pose_with_contact(czas, Pose(Point(0.0, 0.0, 0.3), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,5.0),Vector3(0.0,0.0,0.0)))
 	  	
 	def jedzPoKartceStart(self, czas, xTwist, yTwist):
 		if czas > 20.0:

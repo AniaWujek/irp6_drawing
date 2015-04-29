@@ -19,8 +19,8 @@ def callback(data):
     lastData = data.data
     dataLock.release()
     
-def pozycjaRobocza():
-	move.pozycjaRobocza(10.0)
+def pozycjaRobocza(czas):
+	move.pozycjaRobocza(czas)
 	irpos.move_rel_to_cartesian_pose(7.0, Pose(Point(0.1, 0.0, -0.15), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 	
 def calculatePosition():
@@ -93,9 +93,11 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1 :
 		arg = sys.argv[1]
 		if sys.argv[1] == 'synchro' :
-			irpos.move_to_synchro_position(15.0)
+			irpos.move_to_synchro_position(20.0)
 		if sys.argv[1] == 'robocza' :
-			pozycjaRobocza()
+			pozycjaRobocza(20.0)
+		if sys.argv[1] == 'robocza_szybka' :
+			pozycjaRobocza(10.0)
 		if sys.argv[1] == 'chwytak' :
 			irpos.tfg_to_joint_position(0.08, 10.0)
 			move.zlapKlocek(10.0)
