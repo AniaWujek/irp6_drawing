@@ -144,7 +144,12 @@ if __name__ == '__main__':
 		
 		print suma, len(current_points)
 		
+	variable = raw_input('podloz czysta kartke: nacisnij cokolwiek!')
+	print 'ok!'
 	
+	dataLockPnp.acquire()
+	current_matrix = matrix
+	dataLockPnp.release()
 	
 		
 		
@@ -241,13 +246,13 @@ if __name__ == '__main__':
 			
 			if nextContour:
 				print "podnosi"
-				irpos.move_rel_to_cartesian_pose(3.0, Pose(Point(0.0, 0.0, -0.03), Quaternion(0.0, 0.0, 0.0, 1.0)))	
+				irpos.move_rel_to_cartesian_pose(1.5, Pose(Point(0.0, 0.0, -0.03), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 				print "podniesione"
 			else:
 				nextContour = True
 					
 			print "pierwszy punkt w konturze - jedzie"		
-			irpos.move_to_cartesian_pose(5.0, Pose(Point(point[0], point[1], point[2]), orientacja))
+			irpos.move_to_cartesian_pose(3.0, Pose(Point(point[0], point[1], point[2]), orientacja))
 			print "pierwszy punkt w konturze - dojechal"
 			
 			print "zjedz do kartki"

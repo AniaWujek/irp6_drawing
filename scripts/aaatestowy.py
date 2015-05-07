@@ -12,12 +12,36 @@ dataLock = threading.Lock()
 
 move = None
 lastData = None
+sila = None
+kontakt1 = False
+kontakt2 = False
+kontakt3 = False
 
 def callback(data):
     dataLock.acquire()
     global lastData
     lastData = data.data
     dataLock.release()
+    
+def callbackForce(data):
+
+	global licznik
+	global sila
+	global kontakt1
+	global kontakt2
+	global kontakt3
+	dataLock.acquire()	
+	sila = data.wrench.force.z
+	if sila > 5.0:
+		if kontakt1:
+			if kontakt2:
+				kontakt3 = True
+			else:
+				kontakt2 = True
+		else:
+			kontakt1 = True
+		
+	dataLock.release()
     
 def pozycjaRobocza(czas):
 	move.pozycjaRobocza(czas)
@@ -131,6 +155,13 @@ if __name__ == '__main__':
 			points.append(point1)
 			irpos.move_along_cartesian_trajectory(points)
 			print points
+			
+		if sys.argv[1] == 'sila_dol' :
+			dataLock.acquire()	
+			
+			
+			
+			dataLock.release()	
 		
 
 
