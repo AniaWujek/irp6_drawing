@@ -16,7 +16,7 @@ dataLock = threading.Lock()
 
 
 licznik = 0;
-sily = [0,0,0,0,0,0,0,0,0,0]
+sily = [0,0,0,0,0]
 
 
 def callback(data):
@@ -24,8 +24,12 @@ def callback(data):
 	global licznik
 	global sily
 	dataLock.acquire()	
-	sily[licznik] = data.wrench.force.z
-	licznik = (licznik + 1) % 10	
+	#sily[licznik] = data.wrench.force.z
+	#licznik = (licznik + 1) % 3
+	if data.wrench.force.z > 0:
+		sily[licznik] = data.wrench.force.z
+		#print data.wrench.force.z
+		licznik = (licznik + 1) % 5
 	dataLock.release()
 
 if __name__ == '__main__':
@@ -37,9 +41,13 @@ if __name__ == '__main__':
 	
 	while not rospy.is_shutdown():
 		
-		print sum(sily) / len(sily)
+		#print "                  ", sum(sily) / len(sily)
+		if sum(sily) / len(sily) > 3.0:
+			print "JEST"
+		else:
+			print " "
 		
-		rospy.sleep(1.0)
+		rospy.sleep(0.01)
 		
 	irpos.conmanSwitch([], [irpos.robot_name+'mForceTransformation'], True)
 	

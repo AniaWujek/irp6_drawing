@@ -24,6 +24,26 @@ matrix = numpy.zeros(shape=(4,4))
 
 matrix[3,3] = 1.0
 
+wrenchLock = threading.Lock()
+
+
+licznikSil = 0;
+sily = [0,0,0,0,0]
+
+
+def callbackWrench(data):
+
+	global licznikSil
+	global sily
+	wrenchLock.acquire()	
+	#sily[licznik] = data.wrench.force.z
+	#licznik = (licznik + 1) % 3
+	if (data is not None) and (data.wrench.force.z > 0):
+		sily[licznikSil] = data.wrench.force.z
+		#print data.wrench.force.z
+		licznikSil = (licznikSil + 1) % 5
+	wrenchLock.release()
+
 
 
 def callbackPnp(data):
@@ -74,6 +94,7 @@ if __name__ == '__main__':
 	
 	rospy.Subscriber("pnp", Float32MultiArray, callbackPnp)
 	rospy.Subscriber("points", Float32MultiArray, callbackPoints)
+	rospy.Subscriber("irp6ot_arm/wrist_wrench", WrenchStamped, callbackWrench)
 
 	irpos = IRPOS("jedz_krawedzie", "Irp6ot", 7, "irp6ot_manager")
 	#irpos = IRPOS("jedz_krawedzie", "Irp6ot", 7)
@@ -165,7 +186,7 @@ if __name__ == '__main__':
 	TBG = TBG + numpy.matrix([[0,0,0,pX],[0,0,0,pY],[0,0,0,pZ],[0,0,0,0]])
 				
 	#current_matrix[1,3] = current_matrix[1,3] - 0.01
-	current_matrix[0,3] = current_matrix[0,3] - 0.02
+	current_matrix[0,3] = current_matrix[0,3] - 0.01
 
 	pointsVector = []
 	czas = 0.0
@@ -205,7 +226,7 @@ if __name__ == '__main__':
 				 #punkt w ukladzie robota	
 				point = transformation * point			
 						
-				point[2] = point[2] + 0.37				
+				point[2] = point[2] + 0.40				
 									
 				if not checkPoint(point):
 					print "point error!"
@@ -256,8 +277,16 @@ if __name__ == '__main__':
 			print "pierwszy punkt w konturze - dojechal"
 			
 			print "zjedz do kartki"
-			irpos.move_rel_to_cartesian_pose_with_contact(5.0, Pose(Point(0.0, 0.0, 0.1), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,5.0),Vector3(0.0,0.0,0.0)))
-			irpos.move_rel_to_cartesian_pose(0.3, Pose(Point(0.0, 0.0, -0.003), Quaternion(0.0, 0.0, 0.0, 1.0)))	
+			#irpos.move_rel_to_cartesian_pose_with_contact(5.0, Pose(Point(0.0, 0.0, 0.1), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,5.0),Vector3(0.0,0.0,0.0)))
+			irpos.set_tool_physical_params(10.8, Vector3(0.004, 0.0, 0.156))
+			irpos.start_force_controller(Inertia(Vector3(20.0, 20.0, 20.0), Vector3(0.0, 0.0, 0.0)), ReciprocalDamping(Vector3(0.0025, 0.0025, 0.0025), Vector3(0.0, 0.0, 0.0)), Wrench(Vector3(0.0, 0.0, 7.0), Vector3(0.0, 0.0, 0.0)), Twist(Vector3(0.0, 0.0, 0.0), Vector3(0.0, 0.0, 0.0)))
+			irpos.set_force_controller_goal(Inertia(Vector3(20.0, 20.0, 20.0), Vector3(0.0, 0.0, 0.0)), ReciprocalDamping(Vector3(0.0025, 0.0025, 0.0025), Vector3(0.0, 0.0, 0.0)), Wrench(Vector3(0.0, 0.0, 7.0), Vector3(0.0, 0.0, 0.0)), Twist(Vector3(0.0, 0.0, 0.0), Vector3(0.0, 0.0, 0.0)))	
+			
+			while sum(sily) / len(sily) < 3.0:
+				rospy.sleep(0.01)
+			irpos.stop_force_controller()
+			
+			#irpos.move_rel_to_cartesian_pose(0.3, Pose(Point(0.0, 0.0, -0.003), Quaternion(0.0, 0.0, 0.0, 1.0)))	
 			print "zjechal"
 			z = irpos.get_cartesian_pose().position.z
 			oldPoint = point

@@ -112,16 +112,25 @@ if __name__ == '__main__':
 	
 	print 'zbieranie danych ..'
 	
+	testData = []
+	
 	for i in range(0,10):		
 		dataLockPoints.acquire()
 		current_points = points
 		suma = suma + len(points)
+		testData[i] = current_points
 		dataLockPoints.release()
 		rospy.sleep(0.5)
 		
 	print 'dane zebrane!'
 		
 	avg = suma / 10
+	
+	
+	minimum = 0
+	for i in range(1,10):
+		if len(testData[i] < len(testData[minimum)):
+			minimum = i
 	
 	dataLockPoints.acquire()
 	current_points = points
@@ -144,6 +153,8 @@ if __name__ == '__main__':
 		
 		print suma, len(current_points)
 		
+	################## current_points = testData[minimum]
+		
 	
 	
 		
@@ -160,7 +171,7 @@ if __name__ == '__main__':
 	TBG = TBG + numpy.matrix([[0,0,0,pX],[0,0,0,pY],[0,0,0,pZ],[0,0,0,0]])
 				
 	#current_matrix[1,3] = current_matrix[1,3] - 0.01
-	current_matrix[0,3] = current_matrix[0,3] - 0.02
+	#current_matrix[0,3] = current_matrix[0,3] - 0.02
 
 	pointsVector = []
 	czas = 0.0
