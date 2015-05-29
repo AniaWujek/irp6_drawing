@@ -131,39 +131,47 @@ if __name__ == '__main__':
 	
 	suma = 0
 	
+	current_points = []
+	dataLockPoints.acquire()
+	current_points = points
+	dataLockPoints.release()
+	rospy.sleep(0.5)
+	
 	print 'zbieranie danych ..'
 	
 	for i in range(0,10):		
 		dataLockPoints.acquire()
-		current_points = points
-		suma = suma + len(points)
+		#current_points = points
+		#suma = suma + len(points)
+		if len(points) < len(current_points):
+			current_points = points
 		dataLockPoints.release()
 		rospy.sleep(0.5)
 		
 	print 'dane zebrane!'
 		
-	avg = suma / 10
+	#avg = suma / 10
 	
-	dataLockPoints.acquire()
-	current_points = points
-	dataLockPoints.release()
+	#dataLockPoints.acquire()
+	#current_points = points
+	#dataLockPoints.release()
 	
-	dataLockPnp.acquire()
-	current_matrix = matrix
-	dataLockPnp.release()
+	#dataLockPnp.acquire()
+	#current_matrix = matrix
+	#dataLockPnp.release()
 	
-	print 'czekamy na dobre kontury :)'
+	#print 'czekamy na dobre kontury :)'
 	
-	while len(current_points) > avg:
-		dataLockPnp.acquire()
-		current_matrix = matrix
-		dataLockPnp.release()
+	#while len(current_points) > avg:
+	#	dataLockPnp.acquire()
+	#	current_matrix = matrix
+	#	dataLockPnp.release()
 		
-		dataLockPoints.acquire()
-		current_points = points
-		dataLockPoints.release()
+	#	dataLockPoints.acquire()
+	#	current_points = points
+	#	dataLockPoints.release()
 		
-		print suma, len(current_points)
+	#	print suma, len(current_points)
 		
 	variable = raw_input('podloz czysta kartke: nacisnij cokolwiek!')
 	print 'ok!'
@@ -186,7 +194,7 @@ if __name__ == '__main__':
 	TBG = TBG + numpy.matrix([[0,0,0,pX],[0,0,0,pY],[0,0,0,pZ],[0,0,0,0]])
 				
 	#current_matrix[1,3] = current_matrix[1,3] - 0.01
-	current_matrix[0,3] = current_matrix[0,3] - 0.01
+	#current_matrix[0,3] = current_matrix[0,3] - 0.01
 
 	pointsVector = []
 	czas = 0.0
@@ -275,6 +283,7 @@ if __name__ == '__main__':
 			print "pierwszy punkt w konturze - jedzie"		
 			irpos.move_to_cartesian_pose(3.0, Pose(Point(point[0], point[1], point[2]), orientacja))
 			print "pierwszy punkt w konturze - dojechal"
+			rospy.sleep(0.3)
 			
 			print "zjedz do kartki"
 			#irpos.move_rel_to_cartesian_pose_with_contact(5.0, Pose(Point(0.0, 0.0, 0.1), Quaternion(0.0, 0.0, 0.0, 1.0)), Wrench(Vector3(0.0,0.0,5.0),Vector3(0.0,0.0,0.0)))
